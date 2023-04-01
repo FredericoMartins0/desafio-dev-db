@@ -6,11 +6,10 @@ import jakarta.persistence.Table;
 import org.springframework.desafio.db.modelo.Pessoa;
 
 @Entity
-@Table
+@Table(name = "dbservantes")
 public class Dbservante extends Pessoa {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "restaurante")
-    private String restaurante;
+
 }

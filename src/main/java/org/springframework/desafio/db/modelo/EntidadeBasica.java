@@ -1,11 +1,10 @@
 package org.springframework.desafio.db.modelo;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+@MappedSuperclass
 public class EntidadeBasica implements Serializable {
 
     private static final long serialVersionUID = 1L;
