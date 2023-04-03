@@ -3,9 +3,6 @@ package org.springframework.desafio.db.modelo;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.desafio.db.entidades.Dbservante;
-
-import java.util.List;
 
 @MappedSuperclass
 public class EntidadeNomeada extends EntidadeBasica{

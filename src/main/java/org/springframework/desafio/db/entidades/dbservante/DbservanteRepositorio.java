@@ -1,4 +1,4 @@
-package org.springframework.desafio.db.entidades;
+package org.springframework.desafio.db.entidades.dbservante;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
