@@ -9,8 +9,5 @@
         <module name="desafio-dev-db" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="desafio-dev-db" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>

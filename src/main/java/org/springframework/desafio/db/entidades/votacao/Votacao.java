@@ -8,6 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 
 @Entity
 @Table(name="votacao")
@@ -18,6 +21,9 @@ public class Votacao extends EntidadeBasica {
     @Column(name="data")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate data;
+
+    @Column(name="dia_semana")
+    private String diaSemana;
 
     @Column(name="hora")
     @DateTimeFormat(pattern = "HH:mm")
@@ -30,6 +36,7 @@ public class Votacao extends EntidadeBasica {
     public Votacao(){
         this.data = LocalDate.now();
         this.hora = LocalTime.now();
+        this.diaSemana = this.data.getDayOfWeek().getDisplayName(TextStyle.FULL,new Locale("pt"));
     }
 
     public LocalDate obterData(){
@@ -54,5 +61,13 @@ public class Votacao extends EntidadeBasica {
 
     public void definirDbId(Integer dbId){
         this.dbId = dbId;
+    }
+
+    public String obterDiaSemana(){
+        return this.diaSemana;
+    }
+
+    public void definirDiaSemana(String diaSemana){
+        this.diaSemana = diaSemana;
     }
 }
