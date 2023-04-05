@@ -13,26 +13,12 @@ public class EntidadeNomeada extends EntidadeBasica{
     @NotBlank
     private String nome;
 
-    @Column(name = "votos")
-    private Integer votos;
 
     public String obterNome(){
         return nome;
     }
 
-    public Integer obterVotos() {
-        return votos;
-    }
-
     public void definirNome(String nome){
         this.nome = nome;
-    }
-
-    public void definirVotos(Integer votos){
-        this.votos = votos;
-    }
-
-    public void adicionarVoto(){
-        this.votos += 1;
     }
 }
