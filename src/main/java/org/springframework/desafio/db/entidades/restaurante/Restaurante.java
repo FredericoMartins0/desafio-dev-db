@@ -13,7 +13,7 @@ import java.util.*;
 @Table(name="restaurantes")
 public class Restaurante extends EntidadeNomeada {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dbservante")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "restaurante")
     private Set<Dbservante> dbservantes;
 
     @Column(name="votos")

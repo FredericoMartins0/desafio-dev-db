@@ -24,7 +24,7 @@ public class ControladorDbservante {
 
     @ModelAttribute("restaurante")
     public Restaurante buscarRestaurante(@PathVariable("restauranteId")int restauranteId){
-        return this.restaurantes.buscarPorId(restauranteId);
+        return this.restaurantes.findById(restauranteId);
     }
 
     @InitBinder("restaurante")
@@ -58,19 +58,19 @@ public class ControladorDbservante {
             return VISUALIZACAO_CRIACAO;
         }
         else{
-            this.dbservantes.salvar(dbservante);
-            return "redirect:/dbservantes/{dbservanteId}";
+            this.dbservantes.save(dbservante);
+            return "redirect:/dbservantes/{db_id}";
         }
     }
 
-    @GetMapping("/dbservantes/{dbservanteId}/editar")
-    public String initEditarDbservante(@PathVariable("dbservanteId")int dbservanteId, ModelMap modelo){
-        Dbservante dbservante = this.dbservantes.encontrarPorId(dbservanteId);
+    @GetMapping("/dbservantes/{db_id}/editar")
+    public String initEditarDbservante(@PathVariable("db_id")int dbservanteId, ModelMap modelo){
+        Dbservante dbservante = this.dbservantes.findById(dbservanteId);
         modelo.put("dbservante",dbservante);
         return VISUALIZACAO_CRIACAO;
     }
 
-    @PostMapping("/dbservantes/{dbservanteId}/editar")
+    @PostMapping("/dbservantes/{db_id}/editar")
     public String processarEdicaoDbservante(@Valid Dbservante dbservante, BindingResult resultado, Restaurante restaurante, ModelMap modelo){
         if(resultado.hasErrors()){
             dbservante.definirRestaurante(restaurante);
@@ -78,7 +78,7 @@ public class ControladorDbservante {
             return VISUALIZACAO_CRIACAO;
         }else{
             restaurante.adicionarDbservante(dbservante);
-            this.dbservantes.salvar(dbservante);
+            this.dbservantes.save(dbservante);
             return "redirect:/restaurantes/{restauranteId}";
         }
     }

@@ -27,27 +27,27 @@ public class ControladorVotacao {
     }
 
     @ModelAttribute("votacao")
-    public Votacao carregarDbservanteComVoto(@PathVariable("dbServanteId")int dbServanteId, Map<String, Object> modelo){
-        Dbservante dbservante = this.dbservantes.encontrarPorId(dbServanteId);
-        dbservante.definirVotacao(this.votacoes.encontrarDbservantePorId(dbServanteId));
+    public Votacao carregarDbservanteComVoto(@PathVariable("db_id")int dbServanteId, Map<String, Object> modelo){
+        Dbservante dbservante = this.dbservantes.findById(dbServanteId);
+        dbservante.definirVotacao(this.votacoes.findByDbId(dbServanteId));
         modelo.put("dbservante",dbservante);
         Votacao votacao = new Votacao();
         dbservante.adicionarVotacao(votacao);
         return votacao;
     }
 
-    @GetMapping("/dbservantes/{dbservanteId}/votacao/novo")
-    public String initNovaVotacao(@PathVariable("dbservanteId")int dbservanteId, Map<String, Object> modelo){
+    @GetMapping("/dbservantes/{db_id}/votacao/novo")
+    public String initNovaVotacao(@PathVariable("db_id")int dbservanteId, Map<String, Object> modelo){
         return "dbservantes/criarVotacao";
     }
 
-    @PostMapping("/dbservantes/{dbservanteId}/votacao/novo")
+    @PostMapping("/dbservantes/{db_id}/votacao/novo")
     public String processarNovaVotacao(@Valid Votacao votacao, BindingResult resultado){
         if(resultado.hasErrors()){
             return "dbservantes/criarVotacao";
         }else{
-            this.votacoes.salvar(votacao);
-            return "redirect:/dbservantes/{dbservanteId";
+            this.votacoes.save(votacao);
+            return "redirect:/dbservantes/{db_id}";
         }
     }
 }

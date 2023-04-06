@@ -46,7 +46,7 @@ public class ControladorRestaurante {
         if(resultado.hasErrors()){
             return VISUALIZAR_CRUD_RESTAURANTE;
         }else{
-            this.restaurantes.salvar(restaurante);
+            this.restaurantes.save(restaurante);
             return "redirect:/restaurantes/"+restaurante.obterId();
         }
     }
@@ -77,7 +77,7 @@ public class ControladorRestaurante {
 
     @GetMapping("/restaurantes/{restauranteId}/editar")
     public String initEdicaoRestaurante(@PathVariable("restauranteId") int restauranteId, Model modelo){
-        Restaurante restaurante = this.restaurantes.buscarPorId(restauranteId);
+        Restaurante restaurante = this.restaurantes.findById(restauranteId);
         modelo.addAttribute(restaurante);
         return VISUALIZAR_CRUD_RESTAURANTE;
     }
@@ -90,7 +90,7 @@ public class ControladorRestaurante {
         }
         else{
             restaurante.definirId(restauranteId);
-            this.restaurantes.salvar(restaurante);
+            this.restaurantes.save(restaurante);
             return "redirect:/restaurantes/{restauranteId}";
         }
     }
@@ -98,9 +98,9 @@ public class ControladorRestaurante {
     @GetMapping("/restaurantes/{restauranteId}")
     public ModelAndView mostrarRestaurante(@PathVariable("restauranteId") int restauranteId){
         ModelAndView mav = new ModelAndView("restaurantes/restauranteDetalhes");
-        Restaurante restaurante = this.restaurantes.buscarPorId(restauranteId);
+        Restaurante restaurante = this.restaurantes.findById(restauranteId);
         for(Dbservante dbs : restaurante.obterDbservanteInterno()){
-            dbs.definirVotacao(votacoes.encontrarDbservantePorId(dbs.obterId()));
+            dbs.definirVotacao(votacoes.findByDbId(dbs.obterId()));
         }
         mav.addObject(restaurante);
         return mav;

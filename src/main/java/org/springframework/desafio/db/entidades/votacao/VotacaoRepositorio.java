@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VotacaoRepositorio extends Repository<Votacao,Integer> {
 
-    void salvar(Votacao votacao) throws DataAccessException;
+    void save(Votacao votacao) throws DataAccessException;
 
-    List<Votacao> encontrarDbservantePorId(Integer dbId);
+    List<Votacao> findByDbId(Integer dbId);
 }

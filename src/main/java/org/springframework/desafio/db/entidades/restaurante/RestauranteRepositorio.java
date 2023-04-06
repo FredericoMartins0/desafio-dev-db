@@ -13,9 +13,9 @@ public interface RestauranteRepositorio extends Repository<Restaurante,Integer> 
     @Transactional(readOnly = true)
     Collection<Restaurante> buscarPorNome(@Param("nome") String nome);
 
-    @Query("SELECT DISTINCT restaurante FROM Restaurante restaurante left join fetch restaurante.dbservantes WHERE restaurante.id =:id%")
+    @Query("SELECT restaurante FROM Restaurante restaurante left join fetch restaurante.dbservantes WHERE restaurante.id =:id")
     @Transactional(readOnly = true)
-    Restaurante buscarPorId(@Param("id")Integer id);
+    Restaurante findById(@Param("id")Integer id);
 
-    void salvar(Restaurante restaurante);
+    void save(Restaurante restaurante);
 }
