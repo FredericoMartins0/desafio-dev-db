@@ -8,6 +8,6 @@ public class ControladorBoasVindas {
 
     @GetMapping("/")
     public String boasVindas(){
-        return "boasVindas";
+        return "home";
     }
 }
