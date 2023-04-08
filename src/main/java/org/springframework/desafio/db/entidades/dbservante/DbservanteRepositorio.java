@@ -9,13 +9,14 @@ import java.util.Collection;
 
 public interface DbservanteRepositorio extends Repository<Dbservante, Integer> {
 
-    @Query("SELECT dbservante FROM Dbservante dbservante WHERE dbservante.nome LIKE :nome%")
-    @Transactional(readOnly = true)
-    Collection<Dbservante> encontrarPorNome(@Param("nome") String nome);
+	@Query("SELECT dbservante FROM Dbservante dbservante WHERE dbservante.nome LIKE :nome%")
+	@Transactional(readOnly = true)
+	Collection<Dbservante> encontrarPorNome(@Param("nome") String nome);
 
-//    @Query("SELECT FROM Dbservante dbservante WHERE dbservante.id =:id")
-    @Transactional(readOnly = true)
-    Dbservante findById(@Param("id") Integer id);
+	// @Query("SELECT FROM Dbservante dbservante WHERE dbservante.id =:id")
+	@Transactional(readOnly = true)
+	Dbservante findById(@Param("id") Integer id);
 
-    void save(Dbservante dbservante);
+	void save(Dbservante dbservante);
+
 }

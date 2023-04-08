@@ -5,9 +5,10 @@ import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
-public interface VotacaoRepositorio extends Repository<Votacao,Integer> {
+public interface VotacaoRepositorio extends Repository<Votacao, Integer> {
 
-    void save(Votacao votacao) throws DataAccessException;
+	void save(Votacao votacao) throws DataAccessException;
 
-    List<Votacao> findByDbId(Integer dbId);
+	List<Votacao> findByDbId(Integer dbId);
+
 }

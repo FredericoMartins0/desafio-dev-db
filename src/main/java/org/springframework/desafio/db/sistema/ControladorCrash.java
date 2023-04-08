@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ControladorCrash {
-    @GetMapping("/oups")
-    public String dispararExcessao(){
-        throw new RuntimeException("Algo de errado ocorreu! Por favor, tente novamente mais tarde!");
-    }
+
+	@GetMapping("/oups")
+	public String dispararExcessao() {
+		throw new RuntimeException("Algo de errado ocorreu! Por favor, tente novamente mais tarde!");
+	}
+
 }

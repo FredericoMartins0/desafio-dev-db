@@ -14,66 +14,68 @@ import java.util.*;
 @Table(name = "dbservantes")
 public class Dbservante extends Pessoa {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Column(name="equipe")
-    private String equipe;
+	@Column(name = "equipe")
+	private String equipe;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurante_id")
-    private Restaurante restaurante;
+	@ManyToOne
+	@JoinColumn(name = "restaurante_id")
+	private Restaurante restaurante;
 
-    @Transient
-    private Set<Votacao> votacoes = new LinkedHashSet<>();
+	@Transient
+	private Set<Votacao> votacoes = new LinkedHashSet<>();
 
+	public String obterEquipe() {
+		return this.equipe;
+	}
 
-    public String obterEquipe(){
-        return this.equipe;
-    }
+	public void definirEquipe(String equipe) {
+		this.equipe = equipe;
+	}
 
-    public void definirEquipe(String equipe){
-        this.equipe = equipe;
-    }
+	public Restaurante obterRestaurante() {
+		return this.restaurante;
+	}
 
-    public Restaurante obterRestaurante(){
-        return this.restaurante;
-    }
+	public void definirRestaurante(Restaurante restaurante) {
+		this.restaurante = restaurante;
+	}
 
-    public void definirRestaurante(Restaurante restaurante){
-        this.restaurante = restaurante;
-    }
+	protected Set<Votacao> obterVotacoesInterna() {
+		if (this.votacoes == null) {
+			this.votacoes = new HashSet<>();
+		}
+		return this.votacoes;
+	}
 
-    protected Set<Votacao> obterVotacoesInterna(){
-        if(this.votacoes == null){
-            this.votacoes = new HashSet<>();
-        }
-        return this.votacoes;
-    }
+	protected void definirVotacaoInterna(Collection<Votacao> votacoes) {
+		this.votacoes = new LinkedHashSet<>(votacoes);
+	}
 
-    protected void definirVotacaoInterna(Collection<Votacao>votacoes){
-        this.votacoes = new LinkedHashSet<>(votacoes);
-    }
+	public void definirVotacao(Collection<Votacao> votacoes) {
+		definirVotacaoInterna(votacoes);
+	}
 
-    public void definirVotacao(Collection<Votacao>votacoes){
-        definirVotacaoInterna(votacoes);
-    }
+	public List<Votacao> obterVotacoes() {
+		List<Votacao> votacoesOrdenadas = new ArrayList<>(obterVotacoesInterna());
+		PropertyComparator.sort(votacoesOrdenadas, new MutableSortDefinition("data", false, false));
+		return Collections.unmodifiableList(votacoesOrdenadas);
+	}
 
-    public List<Votacao> obterVotacoes(){
-        List<Votacao> votacoesOrdenadas = new ArrayList<>(obterVotacoesInterna());
-        PropertyComparator.sort(votacoesOrdenadas,new MutableSortDefinition("data",false,false));
-        return Collections.unmodifiableList(votacoesOrdenadas);
-    }
+	public void adicionarVotacao(Votacao votacao) {
+		obterVotacoesInterna().add(votacao);
+		votacao.definirDbId(this.obterId());
+	}
 
-    public void adicionarVotacao(Votacao votacao){
-        obterVotacoesInterna().add(votacao);
-        votacao.definirDbId(this.obterId());
-    }
-
-    @Override
-    public String toString(){
-        return new ToStringCreator(this)
-                .append("id",this.obterId()).append("novo",this.novoId()).append("nome",this.obterNome())
-                .append("sobrenome",this.obterSobrenome()).append("equipe",this.equipe).toString();
-    }
+	@Override
+	public String toString() {
+		return new ToStringCreator(this).append("id", this.obterId())
+			.append("novo", this.novoId())
+			.append("nome", this.obterNome())
+			.append("sobrenome", this.obterSobrenome())
+			.append("equipe", this.equipe)
+			.toString();
+	}
 
 }

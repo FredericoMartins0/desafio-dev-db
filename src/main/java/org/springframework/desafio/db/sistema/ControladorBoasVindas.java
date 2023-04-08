@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ControladorBoasVindas {
 
-    @GetMapping("/")
-    public String boasVindas(){
-        return "home";
-    }
+	@GetMapping("/")
+	public String boasVindas() {
+		return "welcome";
+	}
+
 }
