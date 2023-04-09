@@ -55,6 +55,18 @@ public class Restaurante extends EntidadeNomeada {
 		dbservante.definirRestaurante(this);
 	}
 
+	public Dbservante obterDbservante(Integer id){
+		for(Dbservante dbs : obterDbservantes()){
+			if(!dbs.novoId()){
+				Integer auxId = dbs.obterId();
+				if(auxId.equals(id)){
+					return dbs;
+				}
+			}
+		}
+		return null;
+	}
+
 	public Dbservante obterDbservantePorNome(String nome) {
 		return obterDbservantePorNome(nome, false);
 	}

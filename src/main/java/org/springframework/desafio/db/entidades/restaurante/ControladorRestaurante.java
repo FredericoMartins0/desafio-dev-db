@@ -104,9 +104,6 @@ public class ControladorRestaurante {
 	public ModelAndView mostrarRestaurante(@PathVariable("restauranteId") int restauranteId) {
 		ModelAndView mav = new ModelAndView("restaurantes/restauranteDetalhes");
 		Restaurante restaurante = this.restaurantes.findById(restauranteId);
-		for (Dbservante dbs : restaurante.obterDbservanteInterno()) {
-			dbs.definirVotacao(votacoes.findByDbId(dbs.obterId()));
-		}
 		mav.addObject(restaurante);
 		return mav;
 	}

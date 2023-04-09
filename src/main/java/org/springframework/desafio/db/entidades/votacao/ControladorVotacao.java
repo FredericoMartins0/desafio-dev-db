@@ -1,15 +1,21 @@
 package org.springframework.desafio.db.entidades.votacao;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.desafio.db.entidades.dbservante.Dbservante;
 import org.springframework.desafio.db.entidades.dbservante.DbservanteRepositorio;
 import org.springframework.desafio.db.entidades.restaurante.Restaurante;
+import org.springframework.desafio.db.entidades.restaurante.RestauranteRepositorio;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -17,11 +23,11 @@ public class ControladorVotacao {
 
 	private final VotacaoRepositorio votacoes;
 
-	private final DbservanteRepositorio dbservantes;
+	private final RestauranteRepositorio restaurantes;
 
-	public ControladorVotacao(VotacaoRepositorio votacoes, DbservanteRepositorio dbservantes) {
+	public ControladorVotacao(VotacaoRepositorio votacoes, RestauranteRepositorio restaurantes) {
 		this.votacoes = votacoes;
-		this.dbservantes = dbservantes;
+		this.restaurantes = restaurantes;
 	}
 
 	@InitBinder
@@ -29,63 +35,33 @@ public class ControladorVotacao {
 		dataBinder.setDisallowedFields("id");
 	}
 
-	@ModelAttribute("votacao")
-	public Votacao carregarDbservanteComVoto(@PathVariable("db_id") int dbServanteId, Map<String, Object> modelo) {
-		Dbservante dbservante = this.dbservantes.findById(dbServanteId);
-		dbservante.definirVotacao(this.votacoes.findByDbId(dbServanteId));
-		modelo.put("dbservante", dbservante);
-		Votacao votacao = new Votacao();
-		dbservante.adicionarVotacao(votacao);
-		return votacao;
-	}
-
-	@GetMapping("/votacao/novo")
-	public String initNovaVotacao(Map<String, Object> modelo) {
-		return "votacao/criarVotacao";
-	}
-
-	@PostMapping("/votacao/novo")
-	public String processarNovaVotacao(@Valid Votacao votacao, BindingResult resultado) {
-		if (resultado.hasErrors()) {
-			return "votacao/criarVotacao";
-		}
-		else {
-			this.votacoes.save(votacao);
-			return "redirect:/votacao/{votacao_id}";
-		}
-	}
-
-	@GetMapping("/votacao/buscar")
-	public String initBuscaVotacao(){
-		return "/votacao/burcarVotacao";
-	}
-
-	@GetMapping("/votacao")
-	public String processarBuscaVotacao(Votacao votacao, BindingResult resultado, Map<String, Object> modelo){
-		if (votacao.obterDiaSemana() == null) {
-			votacao.definirDiaSemana("");
-		}
-		Collection<Votacao> resultados = this.votacoes.findByData(votacao.obterData());
-		if (resultados.isEmpty()) {
-			resultado.rejectValue("data", "notFound", "Votação não encontrada");
-			return "votacao/buscarVotacao";
-		}
-		else if (resultados.size() == 1) {
-			votacao = resultados.iterator().next();
-			return "redirect:/votacao/" + votacao.obterId();
-		}
-		else {
-			modelo.put("selecoes", resultados);
-			return "votacao/listaVotacao";
-		}
-	}
-
 	@GetMapping("/listaVotacao.html")
-	public String listarVotacao(Map<String, Object>modelo){
+	public String listarVotacao(@RequestParam(defaultValue = "1") int pagina, Model modelo){
+		Votacoes votos = new Votacoes();
+		Page<Votacao> paginacao = buscarPagina(pagina);
+		return adicionarPaginacaoModelo(pagina,paginacao,modelo);
+	}
+
+	private String adicionarPaginacaoModelo(int pagina, Page<Votacao> paginacao, Model modelo){
+		List<Votacao> votacaoLista = paginacao.getContent();
+		modelo.addAttribute("currentPage",pagina);
+		modelo.addAttribute("totalPages",paginacao.getTotalPages());
+		modelo.addAttribute("totalItems", paginacao.getTotalElements());
+		modelo.addAttribute("listVotacao",votacaoLista);
+		return "votacao/listaVotacao";
+	}
+
+	private Page<Votacao> buscarPagina(int pagina){
+		int tamanho = 5;
+		Pageable pageable = PageRequest.of(pagina -1,tamanho);
+		return votacoes.findAll(pageable);
+	}
+
+	@GetMapping({"/votacao"})
+	public @ResponseBody Votacoes mostrarListaVotacao(){
 		Votacoes votos = new Votacoes();
 		votos.obterVotacoes().addAll(this.votacoes.findAll());
-		modelo.put("votacoes",votos);
-		return "votacao/listaVotacao";
+		return votos;
 	}
 
 }

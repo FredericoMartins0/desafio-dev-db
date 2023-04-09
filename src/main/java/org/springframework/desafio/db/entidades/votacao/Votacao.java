@@ -3,6 +3,7 @@ package org.springframework.desafio.db.entidades.votacao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.desafio.db.modelo.EntidadeBasica;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,8 +29,11 @@ public class Votacao extends EntidadeBasica {
 	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime hora;
 
-	@Column(name = "db_id")
-	private Integer dbId;
+	@Column(name="votos")
+	private Integer votos;
+
+	@Column(name="restaurante_id")
+	private Integer restauranteId;
 
 	public Votacao() {
 		this.data = LocalDate.now();
@@ -53,12 +57,12 @@ public class Votacao extends EntidadeBasica {
 		this.hora = hora;
 	}
 
-	public Integer obterDbId() {
-		return this.dbId;
+	public Integer obterRestauranteId() {
+		return this.restauranteId;
 	}
 
-	public void definirDbId(Integer dbId) {
-		this.dbId = dbId;
+	public void definirRestauranteId(Integer restauranteId) {
+		this.restauranteId = restauranteId;
 	}
 
 	public String obterDiaSemana() {
@@ -69,4 +73,11 @@ public class Votacao extends EntidadeBasica {
 		this.diaSemana = diaSemana;
 	}
 
+	public void definirVotos(Integer votos){
+		this.votos = votos;
+	}
+
+	public Integer obterVotos(){
+		return this.votos;
+	}
 }
