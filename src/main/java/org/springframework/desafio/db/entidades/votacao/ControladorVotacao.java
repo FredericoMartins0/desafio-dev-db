@@ -3,11 +3,13 @@ package org.springframework.desafio.db.entidades.votacao;
 import jakarta.validation.Valid;
 import org.springframework.desafio.db.entidades.dbservante.Dbservante;
 import org.springframework.desafio.db.entidades.dbservante.DbservanteRepositorio;
+import org.springframework.desafio.db.entidades.restaurante.Restaurante;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Map;
 
 @Controller
@@ -37,20 +39,53 @@ public class ControladorVotacao {
 		return votacao;
 	}
 
-	@GetMapping("/dbservantes/{db_id}/votacao/novo")
-	public String initNovaVotacao(@PathVariable("db_id") int dbservanteId, Map<String, Object> modelo) {
-		return "dbservantes/criarVotacao";
+	@GetMapping("/votacao/novo")
+	public String initNovaVotacao(Map<String, Object> modelo) {
+		return "votacao/criarVotacao";
 	}
 
-	@PostMapping("/dbservantes/{db_id}/votacao/novo")
+	@PostMapping("/votacao/novo")
 	public String processarNovaVotacao(@Valid Votacao votacao, BindingResult resultado) {
 		if (resultado.hasErrors()) {
-			return "dbservantes/criarVotacao";
+			return "votacao/criarVotacao";
 		}
 		else {
 			this.votacoes.save(votacao);
-			return "redirect:/dbservantes/{db_id}";
+			return "redirect:/votacao/{votacao_id}";
 		}
+	}
+
+	@GetMapping("/votacao/buscar")
+	public String initBuscaVotacao(){
+		return "/votacao/burcarVotacao";
+	}
+
+	@GetMapping("/votacao")
+	public String processarBuscaVotacao(Votacao votacao, BindingResult resultado, Map<String, Object> modelo){
+		if (votacao.obterDiaSemana() == null) {
+			votacao.definirDiaSemana("");
+		}
+		Collection<Votacao> resultados = this.votacoes.findByData(votacao.obterData());
+		if (resultados.isEmpty()) {
+			resultado.rejectValue("data", "notFound", "Votação não encontrada");
+			return "votacao/buscarVotacao";
+		}
+		else if (resultados.size() == 1) {
+			votacao = resultados.iterator().next();
+			return "redirect:/votacao/" + votacao.obterId();
+		}
+		else {
+			modelo.put("selecoes", resultados);
+			return "votacao/listaVotacao";
+		}
+	}
+
+	@GetMapping("/listaVotacao.html")
+	public String listarVotacao(Map<String, Object>modelo){
+		Votacoes votos = new Votacoes();
+		votos.obterVotacoes().addAll(this.votacoes.findAll());
+		modelo.put("votacoes",votos);
+		return "votacao/listaVotacao";
 	}
 
 }
